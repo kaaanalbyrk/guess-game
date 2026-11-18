@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#0a1230">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sensei Games">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Sensei Games</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!-- 1) Açılış ekranı: yazı + dairesel yükleme çemberi (4 sn) -->
+<section id="splash">
+  <h1>Sensei Games</h1>
+  <svg class="ring" viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="44"/><circle id="arc" cx="50" cy="50" r="44"/></svg>
+</section>
+<!-- 2) Ana menü -->
+<section id="home" hidden>
+  <button id="play">OYNA</button>
+  <button id="multi" disabled>ÇOK OYUNCULU</button>
+</section>
+<!-- 3) Oyun -->
+<section id="game" hidden>
+  <div id="gbar"><i></i></div>
+  <div id="guess">
+    <input id="inp" type="text" placeholder="Futbolcuyu tahmin et…" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" enterkeyhint="go">
+    <button id="go">Tahmin</button>
+  </div>
+  <div id="msg"></div>
+  <div id="career"></div>
+  <button id="hint"><span>💡</span><em>İpucu</em></button>
+  <div id="result" hidden></div>
+</section>
+<script src="players.js"></script>
+<script src="logic.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
