@@ -22,11 +22,26 @@ function loadPlayer() {
 }
 // Kariyer tablosu (oyuncunun adı gösterilmez)
 function renderCareer(p) {
-  $('#career').innerHTML = `<table><tr><th>Sezon</th><th>Takım</th><th>Lig M</th><th>Lig G</th><th>Top. M</th><th>Top. G</th></tr>` +
-    p.rows.map(r => { const v = x => x ?? '—'; return `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${v(r[2])}</td><td class="g">${v(r[3])}</td><td>${v(r[4])}</td><td class="g">${v(r[5])}</td></tr>`; }).join('') +
-    `</table><div class="src">M: maç · G: gol · Kaynak: ${p.source}</div>`;
+ 
+// Kariyer tablosu (oyuncunun adı gösterilmez)
+function renderCareer(p) {
+  $('#career').innerHTML =
+    `<table>
+      <tr>
+        <th>Sezon</th>
+        <th>Takım</th>
+      </tr>` +
+    p.rows.map(r =>
+      `<tr>
+        <td>${r[0]}</td>
+        <td>${r[1]}</td>
+      </tr>`
+    ).join('') +
+    `</table>`;
+
   $('#career').scrollTop = 0;
 }
+
 
 // 3) Tahmin: yalnızca harf girilebilir
 $('#inp').addEventListener('input', e => { e.target.value = e.target.value.replace(/[^\p{L}\s'’.-]/gu, ''); e.target.classList.remove('bad'); });
