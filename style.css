@@ -1,41 +1,47 @@
-:root{--bg1:#0b1736;--bg2:#070d22;--card:#15234d;--line:#243566;--tx:#fff;--sub:#8fa0cf;--green:#22c55e;--yel:#ffd60a;--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px)}
+:root{--navy:#0b3d24;--card:rgba(4,28,18,.8);--line:rgba(255,255,255,.2);--tx:#fff;--sub:#d3efdd;--green:#4ade80;--yel:#ffd60a;--red:#ff5a5f;--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;margin:0;touch-action:manipulation;-webkit-text-size-adjust:100%;color:var(--tx);background:radial-gradient(120% 90% at 50% 0%,var(--bg1),var(--bg2));font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;overflow:hidden}
-section{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--sat) 24px var(--sab)}
+html,body{height:100%;margin:0;touch-action:manipulation;-webkit-text-size-adjust:100%;color:var(--tx);background:var(--navy);font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+/* Futbol sahası arka planı: çim şeritleri + çizgiler + lacivert perde */
+#pitch{position:fixed;inset:0;z-index:0;background:radial-gradient(120% 60% at 50% 0%,rgba(255,255,255,.16),transparent 62%),repeating-linear-gradient(180deg,#1d8148 0 64px,#187139 64px 128px)}
+#pitch::after{content:"";position:absolute;inset:0;background:radial-gradient(85% 65% at 50% 45%,transparent 38%,rgba(1,16,8,.65) 100%)}
+#pitch svg{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+section{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--sat) 24px var(--sab)}
 section[hidden]{display:none}
-/* Açılış */
-#splash h1{font-size:40px;letter-spacing:1px;margin:0 0 36px;font-weight:800;background:linear-gradient(90deg,#fff,#9db4ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+#splash h1{filter:drop-shadow(0 3px 12px rgba(0,0,0,.45));font-size:40px;letter-spacing:1px;margin:0 0 36px;font-weight:800;background:linear-gradient(90deg,#fff,#9db4ff);-webkit-background-clip:text;background-clip:text;color:transparent}
 .ring{width:96px;height:96px;transform:rotate(-90deg)}
 .ring circle{fill:none;stroke-width:6;stroke-linecap:round}.ring .bg{stroke:var(--line)}
 #arc{stroke:var(--green);stroke-dasharray:276.5;stroke-dashoffset:276.5;transition:stroke-dashoffset 4s linear}
-#splash.out,#home.in{animation:fade .5s}@keyframes fade{from{opacity:0}to{opacity:1}}
-/* Menü */
+#home.in{animation:fade .5s}@keyframes fade{from{opacity:0}to{opacity:1}}
 #home button{width:100%;max-width:340px;border:0;border-radius:22px;font-weight:800;color:#fff}
-#play{padding:30px 0;font-size:34px;letter-spacing:3px;background:linear-gradient(180deg,#2fd873,#16a34a);box-shadow:0 10px 30px rgba(34,197,94,.35)}
+#play{padding:30px 0;font-size:34px;letter-spacing:3px;background:linear-gradient(180deg,#2fd873,#128a3f);border:2px solid rgba(255,255,255,.75)!important;box-shadow:0 12px 34px rgba(0,0,0,.45),0 0 0 6px rgba(255,255,255,.08)}
 #play:active{transform:scale(.97)}
-#multi{margin-top:18px;padding:16px 0;font-size:16px;letter-spacing:2px;background:var(--card);color:var(--sub);opacity:.55;pointer-events:none}
+#multi{margin-top:18px;padding:16px 0;font-size:16px;letter-spacing:2px;background:var(--card);color:var(--sub);opacity:.6;pointer-events:none}
 /* Oyun */
 #game{justify-content:flex-start;align-items:stretch;padding:0}
-#gbar{height:8px;margin-top:var(--sat);background:var(--line)}
+#gbar{height:8px;margin-top:var(--sat);background:rgba(255,255,255,.12)}
 #gbar i{display:block;height:100%;width:0;background:var(--green);box-shadow:0 0 12px var(--green)}
-#guess{display:flex;gap:8px;padding:14px 16px 6px}
-#inp{flex:1;min-width:0;font-size:17px;padding:13px 15px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:#fff;outline:0}
+#topline{display:flex;justify-content:space-between;align-items:center;padding:8px 16px 0}
+#sub{text-shadow:0 1px 6px rgba(0,0,0,.6);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub)}
+#heart{position:relative;width:46px;height:42px;display:grid;place-items:center;filter:drop-shadow(0 3px 8px rgba(255,90,95,.45))}
+#heart svg{position:absolute;inset:0;width:100%;height:100%;fill:var(--red)}
+#heart b{position:relative;font-size:16px;margin-top:-2px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)}
+#heart.empty svg{fill:#4a4f66}#heart.hit{animation:beat .45s}@keyframes beat{30%{transform:scale(1.3)}60%{transform:scale(.9)}}
+#guess{display:flex;gap:8px;padding:8px 16px 6px}
+#inp{flex:1;min-width:0;font-size:17px;padding:13px 15px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:#fff;outline:0;backdrop-filter:blur(6px)}
 #inp:focus{border-color:var(--green)}#inp::placeholder{color:var(--sub)}
-#inp.bad{border-color:#ef4444;animation:shake .35s}@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-#go{border:0;border-radius:14px;padding:0 18px;background:var(--green);color:#06210f;font-weight:700;font-size:15px}
-#msg{min-height:24px;padding:0 18px;font-size:14px;color:var(--yel)}
-#career{flex:1;overflow:auto;padding:4px 12px calc(110px + var(--sab));opacity:0;transition:opacity .4s}
+#inp.bad{border-color:var(--red);animation:shake .35s}@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+#go{border:0;border-radius:14px;padding:0 18px;background:var(--green);color:#04200f;font-weight:700;font-size:15px}
+#msg{min-height:34px;margin:6px 16px 0;font-size:14px;color:var(--yel);width:fit-content;max-width:calc(100% - 32px)}#msg:not(:empty){background:rgba(4,28,18,.88);border:1px solid var(--line);border-radius:10px;padding:6px 12px}#msg.err{color:#ff8a8d}
+#career{flex:1;overflow:auto;padding:4px 16px calc(120px + var(--sab));opacity:0;transition:opacity .4s}
 #career.show{opacity:1}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{position:sticky;top:0;background:#0d1a40;color:var(--sub);font-weight:600;padding:8px 4px;text-align:center}
-td{padding:9px 4px;text-align:center;border-bottom:1px solid var(--line)}
-th:nth-child(2),td:nth-child(2){text-align:left;padding-left:8px}
-td:nth-child(2){font-weight:600}tr:nth-child(even) td{background:rgba(255,255,255,.03)}
-td.g{color:var(--green);font-weight:700}
-.src{color:var(--sub);font-size:11px;padding:10px 4px}
-#hint{position:fixed;right:16px;bottom:calc(14px + var(--sab));border:0;background:none;color:#fff;display:flex;flex-direction:column;align-items:center;gap:4px}
+/* Kariyer zaman çizgisi */
+.tl{list-style:none;margin:6px 0 0 10px;padding:0 0 0 22px;border-left:2px solid var(--line)}
+.tl li{position:relative;display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0;padding:14px 15px;background:var(--card);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(6px)}
+.tl li::before{content:"";position:absolute;left:-30px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(34,197,94,.2)}
+.tl b{font-size:16px}.tl span{font-size:13px;color:var(--yel);white-space:nowrap;font-weight:600}
+#hint{position:fixed;right:16px;bottom:calc(14px + var(--sab));border:0;background:none;color:#fff;display:flex;flex-direction:column;align-items:center;gap:4px;z-index:3}
 #hint span{width:62px;height:62px;border-radius:50%;background:var(--card);border:2px solid var(--yel);display:grid;place-items:center;font-size:30px;box-shadow:0 6px 18px rgba(0,0,0,.4)}
 #hint em{font-style:normal;font-size:12px;color:var(--sub)}
-#result{position:fixed;inset:0;background:rgba(5,9,25,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:8px}
+#result{position:fixed;inset:0;z-index:5;background:rgba(2,22,12,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:8px}
 #result[hidden]{display:none}#result b{font-size:28px;color:var(--green)}#result h2{margin:0;font-size:30px}
 #result button{margin-top:18px;border:0;border-radius:16px;padding:15px 40px;background:var(--green);color:#06210f;font-size:18px;font-weight:800}
