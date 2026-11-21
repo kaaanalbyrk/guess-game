@@ -1,7 +1,8 @@
 // app.js — ekran akışı: açılış → menü → oyun
 const $ = s => document.querySelector(s);
 const show = id => ['splash','home','game'].forEach(x => $('#' + x).hidden = x !== id);
-const S = {queue: [], i: 0, busy: false, lives: 5};
+const S = {queue: [], i: 0, busy: false, lives: 5, coins: 10, xp: 0, level: 1, hinted: false};
+const COST_HINT = 1, COST_PASS = 3, LEVEL_COINS = 10, START_COINS = 10;
 
 // 1) Açılış: çember 4 sn'de dolar, sonra menü gelir
 requestAnimationFrame(() => requestAnimationFrame(() => $('#arc').style.strokeDashoffset = 0));
@@ -15,7 +16,7 @@ $('#play').onclick = () => {
 function loadPlayer() {
   const bar = $('#gbar i'), c = $('#career');
   S.busy = true; c.classList.remove('show'); $('#result').hidden = true; $('#msg').textContent = ''; $('#msg').className = '';
-  $('#inp').value = '';
+  $('#inp').value = ''; S.hinted = false;
   bar.style.transition = 'none'; bar.style.width = '0'; bar.offsetWidth;
   bar.style.transition = 'width 1.4s ease-out'; bar.style.width = '100%';
   setTimeout(() => { renderCareer(S.queue[S.i]); c.classList.add('show'); S.busy = false; }, 1500);
@@ -59,18 +60,55 @@ function guess() {
   if (!v.trim()) return;
   if (isCorrect(v, p)) {
     $('#inp').blur();
-    const last = S.i === S.queue.length - 1;
-    $('#result').innerHTML = `<b>✓ Doğru!</b><h2>${p.name}</h2><button id="next">${last ? 'Tekrar oyna' : 'Sıradaki'}</button>`;
-    $('#result').hidden = false;
-    $('#next').onclick = () => { S.i++; if (S.i >= S.queue.length) { S.queue.sort(() => Math.random() - .5); S.i = 0; } loadPlayer(); };
+    const r = gainXp(S); S.xp = r.xp; S.level = r.level;   // her doğru bilişte +1 XP
+    if (r.up) S.coins += LEVEL_COINS;                      // seviye atlayınca +10 coin
+    saveProgress(); updateHud(); showResult(p, 'ok');
+    if (r.up) showLevelUp();
   } else {
     const i = $('#inp'); i.classList.remove('bad'); i.offsetWidth; i.classList.add('bad');
     setLives(S.lives - 1);
     if (S.lives === 0) showLocked(); else { $('#msg').className = 'err'; $('#msg').textContent = `Yanlış! Kalan hak: ${S.lives}`; }
   }
 }
-// İpucu: oyuncunun baş harfi
-$('#hint').onclick = () => { if (!S.busy) { $('#msg').className = ''; $('#msg').textContent = 'Baş harf: ' + S.queue[S.i].name[0]; } };
+// ---------- XP, coin, ipucu ve pas ----------
+function loadProgress() {
+  const g = (k, d) => { const v = localStorage.getItem(k); return v === null ? d : +v; };
+  S.coins = g('sg_coins', START_COINS); S.xp = g('sg_xp', 0); S.level = g('sg_level', 1); updateHud();
+}
+function saveProgress() { localStorage.setItem('sg_coins', S.coins); localStorage.setItem('sg_xp', S.xp); localStorage.setItem('sg_level', S.level); }
+function updateHud() {
+  const need = xpNeed(S.level);
+  $('#slvl').textContent = S.level; $('#xptxt').textContent = `${S.xp} - ${need}`;
+  $('#xpfill').style.width = (S.xp / need * 100) + '%'; $('#coins').textContent = S.coins;
+}
+function spend(n) {
+  if (S.coins < n) { const m = $('#msg'); m.className = 'err'; m.textContent = `Yeterli coin yok (${n} coin gerekir).`; return false; }
+  S.coins -= n; saveProgress(); updateHud(); return true;
+}
+// Sonuç ekranı: doğru bilince ya da pas geçince oyuncunun adı gösterilir
+function showResult(p, type) {
+  const last = S.i === S.queue.length - 1, ok = type === 'ok';
+  $('#result').innerHTML = `<b class="${ok ? '' : 'pass'}">${ok ? '✓ Doğru!' : '⏭ Pas geçildi'}</b><h2>${p.name}</h2><small>${ok ? '+1 XP' : `-${COST_PASS} coin`}</small><button id="next">${last ? 'Tekrar oyna' : 'Sıradaki'}</button>`;
+  $('#result').hidden = false;
+  $('#next').onclick = () => { S.i++; if (S.i >= S.queue.length) { S.queue.sort(() => Math.random() - .5); S.i = 0; } loadPlayer(); };
+}
+function showLevelUp() {
+  $('#up').innerHTML = `<div class="pop"><div class="st">⭐</div><h3>Tebrikler seviye atladınız</h3><p>Yeni seviye: ${S.level}</p>
+    <div class="gain"><span class="coin"></span>${LEVEL_COINS} coin kazandınız</div><button id="ok">Tamam</button></div>`;
+  $('#up').hidden = false; $('#ok').onclick = () => { $('#up').hidden = true; };
+}
+// İpucu (1 coin): baş harf. Aynı oyuncuda ikinci basış ücretsiz, tekrar gösterir
+$('#hint').onclick = () => {
+  if (S.busy) return;
+  if (!S.hinted) { if (!spend(COST_HINT)) return; S.hinted = true; }
+  $('#msg').className = ''; $('#msg').textContent = 'Baş harf: ' + S.queue[S.i].name[0];
+};
+// Pas (3 coin): oyuncu bilinmiş gibi adı gösterilir, XP verilmez
+$('#pass').onclick = () => {
+  if (S.busy || !spend(COST_PASS)) return;
+  $('#inp').blur(); showResult(S.queue[S.i], 'pass');
+};
+loadProgress();
 
 // Yakınlaştırmayı engelle (iPhone)
 ['gesturestart','gesturechange','gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));

@@ -17,4 +17,12 @@ function isCorrect(guess, p) {
   const g = norm(guess); if (!g) return false;
   return [p.name, ...(p.aliases || [])].map(norm).some(n => n === g || (g.length >= 5 && lev(n, g) <= 1));
 }
-if (typeof module !== 'undefined') module.exports = {norm, lev, isCorrect};
+// Seviye atlamak için gereken XP: 1. seviye 15, sonra 20, 30, 40, 50 ve 5'ten sonra hep 50
+function xpNeed(level) { return level <= 1 ? 15 : Math.min(level * 10, 50); }
+// 1 XP ekler; yeterliyse seviye atlatır ve XP sıfırlanır
+function gainXp(st) {
+  let level = st.level, xp = st.xp + 1, up = false;
+  if (xp >= xpNeed(level)) { level++; xp = 0; up = true; }
+  return {level, xp, up};
+}
+if (typeof module !== 'undefined') module.exports = {norm, lev, isCorrect, xpNeed, gainXp};

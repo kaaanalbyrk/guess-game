@@ -21,7 +21,6 @@ section[hidden]{display:none}
 #gbar{height:8px;margin-top:var(--sat);background:rgba(255,255,255,.12)}
 #gbar i{display:block;height:100%;width:0;background:var(--green);box-shadow:0 0 12px var(--green)}
 #topline{display:flex;justify-content:space-between;align-items:center;padding:8px 16px 0}
-#sub{text-shadow:0 1px 6px rgba(0,0,0,.6);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--sub)}
 #heart{position:relative;width:46px;height:42px;display:grid;place-items:center;filter:drop-shadow(0 3px 8px rgba(255,90,95,.45))}
 #heart svg{position:absolute;inset:0;width:100%;height:100%;fill:var(--red)}
 #heart b{position:relative;font-size:16px;margin-top:-2px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)}
@@ -39,9 +38,35 @@ section[hidden]{display:none}
 .tl li{position:relative;display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0;padding:14px 15px;background:var(--card);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(6px)}
 .tl li::before{content:"";position:absolute;left:-30px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(34,197,94,.2)}
 .tl b{font-size:16px}.tl span{font-size:13px;color:var(--yel);white-space:nowrap;font-weight:600}
-#hint{position:fixed;right:16px;bottom:calc(14px + var(--sab));border:0;background:none;color:#fff;display:flex;flex-direction:column;align-items:center;gap:4px;z-index:3}
-#hint span{width:62px;height:62px;border-radius:50%;background:var(--card);border:2px solid var(--yel);display:grid;place-items:center;font-size:30px;box-shadow:0 6px 18px rgba(0,0,0,.4)}
-#hint em{font-style:normal;font-size:12px;color:var(--sub)}
 #result{position:fixed;inset:0;z-index:5;background:rgba(2,22,12,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:8px}
 #result[hidden]{display:none}#result b{font-size:28px;color:var(--green)}#result h2{margin:0;font-size:30px}
 #result button{margin-top:18px;border:0;border-radius:16px;padding:15px 40px;background:var(--green);color:#06210f;font-size:18px;font-weight:800}
+
+/* Üst bar: sol XP, sağ coin + kalp */
+#topline{padding:8px 12px 0;gap:8px}
+#xpbox,#rbox{display:flex;align-items:center;gap:6px}
+#star{position:relative;width:40px;height:38px;display:grid;place-items:center;filter:drop-shadow(0 3px 8px rgba(255,214,10,.4))}
+#star svg{position:absolute;inset:0;width:100%;height:100%;fill:var(--yel)}
+#star b{position:relative;font-size:15px;color:#3a2a00;margin-top:2px}
+#xpbar{position:relative;width:118px;height:24px;border-radius:12px;background:var(--card);border:1px solid var(--line);overflow:hidden}
+#xpbar i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#16a34a,var(--green));transition:width .5s}
+#xpbar span{position:relative;display:block;text-align:center;font-size:12px;font-weight:700;line-height:22px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.coin{display:inline-block;width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3a6,#ffd60a 45%,#d99a00);box-shadow:inset 0 0 0 2px #b97f00,0 2px 6px rgba(0,0,0,.4);flex:none}
+.coin.cs{width:11px;height:11px;box-shadow:inset 0 0 0 1.5px #b97f00;vertical-align:-1px;margin-left:2px}
+#coinbar{min-width:54px;height:24px;border-radius:12px;background:var(--card);border:1px solid rgba(255,214,10,.55);text-align:center;font-weight:700;font-size:13px;line-height:22px;padding:0 10px}
+#rbox #heart{margin-left:4px}
+/* Sağ altta Pas ve İpucu */
+#fabs{position:fixed;right:14px;bottom:calc(14px + var(--sab));display:flex;gap:14px;z-index:3}
+.fab{border:0;background:none;color:#fff;display:flex;flex-direction:column;align-items:center;gap:4px}
+.fab .ic{width:62px;height:62px;border-radius:50%;background:var(--card);border:2px solid var(--yel);display:grid;place-items:center;font-size:28px;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+#pass .ic{border-color:var(--green)}
+.fab em{font-style:normal;font-size:12px;color:var(--sub);text-shadow:0 1px 4px rgba(0,0,0,.6)}.fab em b{color:var(--yel)}
+.fab:active .ic{transform:scale(.94)}
+#result small{color:var(--sub);font-size:14px}#result b.pass{color:var(--yel)}
+/* Seviye atlama penceresi */
+#up{position:fixed;inset:0;z-index:8;background:rgba(2,22,12,.82);display:flex;align-items:center;justify-content:center;padding:24px}
+#up[hidden]{display:none}
+.pop{background:#0c2b1d;border:1px solid var(--line);border-radius:22px;padding:28px 24px;text-align:center;max-width:330px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.pop .st{font-size:54px;line-height:1}.pop h3{margin:10px 0 4px;font-size:22px}.pop p{margin:4px 0;color:var(--sub)}
+.pop .gain{display:inline-flex;align-items:center;gap:8px;margin:12px 0 4px;font-weight:800;font-size:18px;color:var(--yel)}
+.pop button{margin-top:18px;width:100%;border:0;border-radius:14px;padding:14px;background:var(--green);color:#04200f;font-size:17px;font-weight:800}
