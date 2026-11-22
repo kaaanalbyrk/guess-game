@@ -93,15 +93,15 @@ function showResult(p, type) {
   $('#next').onclick = () => { S.i++; if (S.i >= S.queue.length) { S.queue.sort(() => Math.random() - .5); S.i = 0; } loadPlayer(); };
 }
 function showLevelUp() {
-  $('#up').innerHTML = `<div class="pop"><div class="st">⭐</div><h3>Tebrikler seviye atladınız</h3><p>Yeni seviye: ${S.level}</p>
-    <div class="gain"><span class="coin"></span>${LEVEL_COINS} coin kazandınız</div><button id="ok">Tamam</button></div>`;
+  $('#up').innerHTML = `<div class="pop"><div class="st"><svg class="ico"><use href="#sStar"/></svg><b>${S.level}</b></div><h3>Tebrikler seviye atladınız</h3><p>Yeni seviye: ${S.level}</p>
+    <div class="gain"><svg><use href="#sCoin"/></svg>${LEVEL_COINS} coin kazandınız</div><button id="ok">Tamam</button></div>`;
   $('#up').hidden = false; $('#ok').onclick = () => { $('#up').hidden = true; };
 }
-// İpucu (1 coin): baş harf. Aynı oyuncuda ikinci basış ücretsiz, tekrar gösterir
+// İpucu (1 coin): oyuncunun mevkisi. Aynı oyuncuda ikinci basış ücretsiz, tekrar gösterir
 $('#hint').onclick = () => {
   if (S.busy) return;
   if (!S.hinted) { if (!spend(COST_HINT)) return; S.hinted = true; }
-  $('#msg').className = ''; $('#msg').textContent = 'Baş harf: ' + S.queue[S.i].name[0];
+  $('#msg').className = ''; $('#msg').textContent = 'Mevki: ' + S.queue[S.i].pos;
 };
 // Pas (3 coin): oyuncu bilinmiş gibi adı gösterilir, XP verilmez
 $('#pass').onclick = () => {
