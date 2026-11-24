@@ -78,3 +78,9 @@ section[hidden]{display:none}
 .pop .st .ico{position:absolute;inset:0}.pop .st b{position:relative;font-size:26px;color:#1b2130;margin-top:3px}
 .pop .gain{display:inline-flex;align-items:center;gap:8px;margin:12px 0 4px;font-weight:800;font-size:18px;color:var(--yel)}
 .pop .gain svg{width:28px;height:28px}
+
+/* Bir sonraki cana kalan süre (kalbin altında) */
+#topline{padding-bottom:14px}
+#heart small{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:-2px;font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8);white-space:nowrap}
+
+#ver{position:absolute;bottom:calc(14px + var(--sab));left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.5)}

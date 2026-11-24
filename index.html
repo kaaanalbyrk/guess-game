@@ -14,6 +14,11 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<script>
+// Hata şeridi: bir dosya yüklenmezse ya da kodda hata olursa ekranın üstünde kırmızı şerit çıkar
+function sgHata(m){var b=document.getElementById('dbg');if(!b){b=document.createElement('div');b.id='dbg';b.style.cssText='position:fixed;left:0;right:0;top:0;z-index:99;background:#b00020;color:#fff;font:12px/1.35 -apple-system,sans-serif;padding:calc(6px + env(safe-area-inset-top)) 10px 6px';document.body.appendChild(b)}b.textContent=m}
+window.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='SCRIPT'){sgHata('Dosya yüklenemedi: '+(t.getAttribute('src')||''));return}sgHata('Hata: '+e.message+' ('+String(e.filename||'').split('/').pop()+':'+e.lineno+')')},true);
+</script>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
 <linearGradient id="gStar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f8fb"/><stop offset=".5" stop-color="#bcc3cf"/><stop offset="1" stop-color="#868e9d"/></linearGradient>
 <radialGradient id="gCoin" cx=".35" cy=".3" r=".9"><stop offset="0" stop-color="#fff7b8"/><stop offset=".45" stop-color="#ffd60a"/><stop offset="1" stop-color="#c78700"/></radialGradient>
@@ -40,6 +45,7 @@
 <section id="home" hidden>
   <button id="play">OYNA</button>
   <button id="multi" disabled>ÇOK OYUNCULU</button>
+  <div id="ver"></div>
 </section>
 <!-- 3) Oyun -->
 <section id="game" hidden>
@@ -49,7 +55,7 @@
       <div id="xpbar"><i id="xpfill"></i><span id="xptxt">0 - 15</span></div></div>
     <div id="rbox">
       <div id="coinbox"><div id="coinimg"><svg class="ico"><use href="#sCoin"/></svg></div><div id="coinbar"><span id="coins">10</span></div></div>
-      <div id="heart"><svg class="ico"><use href="#sHeart"/></svg><b id="lives">5</b></div>
+      <div id="heart"><svg class="ico"><use href="#sHeart"/></svg><b id="lives">5</b><small id="regen"></small></div>
     </div>
   </div>
   <div id="guess">

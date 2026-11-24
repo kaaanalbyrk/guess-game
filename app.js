@@ -19,7 +19,7 @@ function loadPlayer() {
   $('#inp').value = ''; S.hinted = false;
   bar.style.transition = 'none'; bar.style.width = '0'; bar.offsetWidth;
   bar.style.transition = 'width 1.4s ease-out'; bar.style.width = '100%';
-  setTimeout(() => { renderCareer(S.queue[S.i]); c.classList.add('show'); S.busy = false; }, 1500);
+  setTimeout(() => { try { renderCareer(S.queue[S.i]); c.classList.add('show'); } finally { S.busy = false; } }, 1500);
 }
 // Kariyer zaman çizgisi: takım + dönem (oyuncunun adı gösterilmez)
 function renderCareer(p) {
@@ -29,10 +29,10 @@ function renderCareer(p) {
 
 // Can sistemi: Yanlış tahmin -1 can. Her 5 dakikada +1 can (5'e kadar), seviye atlayınca +1 can (5'in üstüne de çıkabilir).
 const MAX = 5, REGEN_MIN = 5;
+const readNum = (k, d) => { const x = localStorage.getItem(k), n = (x === null || x === '') ? NaN : +x; return Number.isFinite(n) ? n : d; };   // bozuk kayıt olursa varsayılan
 function refreshLives() {
   localStorage.removeItem('sg_lock');                       // eski 15 dk kilit sisteminden kalan kayıt
-  const v = localStorage.getItem('sg_lives'), t = localStorage.getItem('sg_ts');
-  const st = regen({lives: v === null ? MAX : Math.max(0, Math.min(99, +v)), ts: t === null ? Date.now() : +t}, Date.now(), MAX);
+  const st = regen({lives: Math.max(0, Math.min(99, Math.floor(readNum('sg_lives', MAX)))), ts: readNum('sg_ts', Date.now())}, Date.now(), MAX);
   localStorage.setItem('sg_lives', st.lives); localStorage.setItem('sg_ts', st.ts);
   S.lives = st.lives; S.ts = st.ts;
   $('#lives').textContent = S.lives; $('#heart').classList.toggle('empty', S.lives === 0);
@@ -65,10 +65,13 @@ $('#inp').addEventListener('input', e => {
 $('#inp').addEventListener('keydown', e => { if (e.key === 'Enter') guess(); });
 $('#go').onclick = guess;
 function guess() {
+  try { guessInner(); } catch (e) { const m = $('#msg'); m.className = 'err'; m.textContent = 'Hata: ' + e.message + ' — dosya sürümleri uyuşmuyor olabilir, tüm dosyaları GitHub\'a yeniden yükle.'; console.error(e); }
+}
+function guessInner() {
   if (S.busy) return;
   refreshLives(); if (S.lives === 0) return showLocked();
   const p = S.queue[S.i], v = $('#inp').value;
-  if (!v.trim()) return;
+  if (!v.trim()) { const m = $('#msg'); m.className = 'err'; m.textContent = 'Önce bir futbolcu ismi yaz.'; return; }
   if (isCorrect(v, p)) {
     $('#inp').blur();
     const r = gainXp(S); S.xp = r.xp; S.level = r.level;   // her doğru bilişte +1 XP
@@ -87,8 +90,7 @@ function guess() {
 }
 // ---------- XP, coin, ipucu ve pas ----------
 function loadProgress() {
-  const g = (k, d) => { const v = localStorage.getItem(k); return v === null ? d : +v; };
-  S.coins = g('sg_coins', START_COINS); S.xp = g('sg_xp', 0); S.level = g('sg_level', 1); updateHud();
+  S.coins = Math.max(0, Math.floor(readNum('sg_coins', START_COINS))); S.xp = Math.max(0, Math.floor(readNum('sg_xp', 0))); S.level = Math.max(1, Math.floor(readNum('sg_level', 1))); updateHud();
 }
 function saveProgress() { localStorage.setItem('sg_coins', S.coins); localStorage.setItem('sg_xp', S.xp); localStorage.setItem('sg_level', S.level); }
 function updateHud() {
@@ -129,3 +131,15 @@ loadProgress();
 ['gesturestart','gesturechange','gestureend'].forEach(ev => document.addEventListener(ev, e => e.preventDefault()));
 document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preventDefault(); }, {passive:false});
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(console.error);
+
+// Dosya sürümü kontrolü: app.js, logic.js ve players.js aynı sürümde olmalı
+const APP_V = 10;
+(function () {
+  $('#ver').textContent = 'v' + APP_V;
+  const logicV = typeof DOSYA_SURUMU === 'undefined' ? 'YOK' : DOSYA_SURUMU, veriV = typeof VERI_SURUMU === 'undefined' ? 'YOK' : VERI_SURUMU;
+  if (logicV !== APP_V || veriV !== APP_V) {
+    const m = `Dosyalar uyuşmuyor: app.js v${APP_V}, logic.js v${logicV}, players.js v${veriV}. Tüm dosyaları GitHub'a yeniden yükle.`;
+    if (typeof sgHata === 'function') sgHata(m); else alert(m);
+    $('#ver').textContent = 'v' + APP_V + ' ⚠';
+  }
+})();

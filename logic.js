@@ -1,3 +1,4 @@
+const DOSYA_SURUMU = 10;   // app.js ile aynı olmalı (dosyalar birbirine uyuyor mu diye kontrol edilir)
 // logic.js — Saf fonksiyonlar (tahmin eşleştirme)
 // Türkçe karakterleri ve aksanları sadeleştirir: "Mbappé"→"mbappe", "İbrahimoviç"→"ibrahimovic"
 function norm(s) {
