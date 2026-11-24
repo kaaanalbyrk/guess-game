@@ -1,6 +1,6 @@
 // players.js — 50 oyuncu. Satır: [takım, dönem]. Hint için 'pos' (mevki) kullanılır.
 // src: 'w' Wikipedia 2026 · 'h' 2026 haberleriyle güncellendi · 't' taslak (doğrulanacak)
-const VERI_SURUMU = 10;
+const VERI_SURUMU = 11;
 const PLAYERS = [
   {name:'Cristiano Ronaldo', aliases:['Ronaldo','CR7','Cristiano'], pos:'Santrafor', src:'w', rows:[['Sporting CP','2002 – 2003'],['Manchester United','2003 – 2009'],['Real Madrid','2009 – 2018'],['Juventus','2018 – 2021'],['Manchester United','2021 – 2022'],['Al-Nassr','2022 – günümüz']]},
   {name:'Lionel Messi', aliases:['Messi','Leo Messi','Lionel'], pos:'Sağ açık', src:'w', rows:[['Barcelona','2004 – 2021'],['Paris Saint-Germain','2021 – 2023'],['Inter Miami','2023 – günümüz']]},

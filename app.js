@@ -1,5 +1,13 @@
 // app.js — ekran akışı: açılış → menü → oyun
-const $ = s => document.querySelector(s);
+// $: öğeyi bulur. index.html eskiyse öğe olmayabilir; bu durumda kod ölmesin diye boş bir yedek öğe döner
+const MISSING = [];
+const $ = s => document.querySelector(s) || (MISSING.includes(s) || MISSING.push(s), {style: {}, classList: {add() {}, remove() {}, toggle() {}}, textContent: '', innerHTML: '', value: '', hidden: false, className: '', offsetWidth: 0, scrollTop: 0, blur() {}, addEventListener() {}});
+// Ekranın üstünde kırmızı uyarı şeridi (index.html eski olsa bile çalışır)
+function uyari(m) {
+  let b = document.getElementById('dbg');
+  if (!b) { b = document.createElement('div'); b.id = 'dbg'; b.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99;background:#b00020;color:#fff;font:12px/1.35 -apple-system,sans-serif;padding:calc(6px + env(safe-area-inset-top)) 10px 6px'; document.body.appendChild(b); }
+  b.textContent = m;
+}
 const show = id => ['splash','home','game'].forEach(x => $('#' + x).hidden = x !== id);
 const S = {queue: [], i: 0, busy: false, lives: 5, coins: 10, xp: 0, level: 1, hinted: false};
 const COST_HINT = 1, COST_PASS = 3, LEVEL_COINS = 10, START_COINS = 10;
@@ -133,13 +141,16 @@ document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preven
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(console.error);
 
 // Dosya sürümü kontrolü: app.js, logic.js ve players.js aynı sürümde olmalı
-const APP_V = 10;
+const APP_V = 11;
 (function () {
   $('#ver').textContent = 'v' + APP_V;
   const logicV = typeof DOSYA_SURUMU === 'undefined' ? 'YOK' : DOSYA_SURUMU, veriV = typeof VERI_SURUMU === 'undefined' ? 'YOK' : VERI_SURUMU;
-  if (logicV !== APP_V || veriV !== APP_V) {
-    const m = `Dosyalar uyuşmuyor: app.js v${APP_V}, logic.js v${logicV}, players.js v${veriV}. Tüm dosyaları GitHub'a yeniden yükle.`;
-    if (typeof sgHata === 'function') sgHata(m); else alert(m);
+  const sorunlar = [];
+  if (logicV !== APP_V) sorunlar.push(`logic.js v${logicV}`);
+  if (veriV !== APP_V) sorunlar.push(`players.js v${veriV}`);
+  if (MISSING.length) sorunlar.push('index.html eski (eksik: ' + MISSING.join(', ') + ')');
+  if (sorunlar.length) {
+    uyari(`app.js v${APP_V} ama: ${sorunlar.join(' · ')}. Tüm dosyaları (index.html, style.css dahil) GitHub'a yeniden yükle.`);
     $('#ver').textContent = 'v' + APP_V + ' ⚠';
   }
 })();
