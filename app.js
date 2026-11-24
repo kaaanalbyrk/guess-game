@@ -27,24 +27,35 @@ function renderCareer(p) {
   $('#career').scrollTop = 0;
 }
 
-// Can sistemi: 5 hak, her yanlışta -1, 0 olunca 15 dk kilit (tarayıcıda saklanır)
-const MAX = 5, LOCK_MIN = 15;
+// Can sistemi: Yanlış tahmin -1 can. Her 5 dakikada +1 can (5'e kadar), seviye atlayınca +1 can (5'in üstüne de çıkabilir).
+const MAX = 5, REGEN_MIN = 5;
 function refreshLives() {
-  const lock = +localStorage.getItem('sg_lock') || 0, v = localStorage.getItem('sg_lives');
-  if (lock && Date.now() >= lock) { localStorage.removeItem('sg_lock'); localStorage.setItem('sg_lives', MAX); }
-  S.lives = lock && Date.now() < lock ? 0 : (v === null ? MAX : Math.max(0, Math.min(MAX, +v)));
+  localStorage.removeItem('sg_lock');                       // eski 15 dk kilit sisteminden kalan kayıt
+  const v = localStorage.getItem('sg_lives'), t = localStorage.getItem('sg_ts');
+  const st = regen({lives: v === null ? MAX : Math.max(0, Math.min(99, +v)), ts: t === null ? Date.now() : +t}, Date.now(), MAX);
+  localStorage.setItem('sg_lives', st.lives); localStorage.setItem('sg_ts', st.ts);
+  S.lives = st.lives; S.ts = st.ts;
   $('#lives').textContent = S.lives; $('#heart').classList.toggle('empty', S.lives === 0);
+  $('#regen').textContent = S.lives < MAX ? fmtTime(nextMs()) : '';
 }
-function setLives(n) {
-  localStorage.setItem('sg_lives', n);
-  if (n === 0) localStorage.setItem('sg_lock', Date.now() + LOCK_MIN * 60000);
-  refreshLives(); const h = $('#heart'); h.classList.remove('hit'); h.offsetWidth; h.classList.add('hit');
+const nextMs = () => REGEN_MS - (Date.now() - S.ts);        // bir sonraki cana kalan süre
+function setLives(n, hit) {
+  n = Math.max(0, Math.min(99, n));
+  const ts = n >= MAX ? Date.now() : (S.lives >= MAX ? Date.now() : S.ts);   // can doluyken ilk kayıpta sayaç başlar
+  localStorage.setItem('sg_lives', n); localStorage.setItem('sg_ts', ts); refreshLives();
+  if (hit) { const h = $('#heart'); h.classList.remove('hit'); h.offsetWidth; h.classList.add('hit'); }
 }
+function addLife() { refreshLives(); setLives(S.lives + 1); return true; }   // seviye atlayınca can 5'in üstüne de çıkabilir
 function showLocked() {
-  const left = Math.max(1, Math.ceil(((+localStorage.getItem('sg_lock') || 0) - Date.now()) / 60000));
-  const m = $('#msg'); m.className = 'err'; m.textContent = `Tahmin hakkın bitti. ${LOCK_MIN} dakika sonra tekrar gel. (kalan ~${left} dk)`;
+  const m = $('#msg'); m.className = 'err';
+  m.textContent = `Tahmin hakkın bitti. ${REGEN_MIN} dakika sonra tekrar gel. (yeni can: ${fmtTime(nextMs())})`;
 }
-refreshLives(); setInterval(() => { const was = S.lives; refreshLives(); if (was === 0 && S.lives > 0) $('#msg').textContent = ''; }, 5000);
+refreshLives();
+setInterval(() => {
+  const was = S.lives; refreshLives(); const m = $('#msg');
+  if (was === 0 && S.lives > 0) { m.textContent = ''; m.className = ''; }
+  else if (S.lives === 0 && m.textContent.startsWith('Tahmin hakkın bitti')) showLocked();   // geri sayımı güncelle
+}, 1000);
 
 // 3) Tahmin: yalnızca harf girilebilir
 $('#inp').addEventListener('input', e => {
@@ -61,12 +72,16 @@ function guess() {
   if (isCorrect(v, p)) {
     $('#inp').blur();
     const r = gainXp(S); S.xp = r.xp; S.level = r.level;   // her doğru bilişte +1 XP
-    if (r.up) S.coins += LEVEL_COINS;                      // seviye atlayınca +10 coin
+    let gotLife = false;
+    if (r.up) { S.coins += LEVEL_COINS; gotLife = addLife(); }   // seviye atlayınca +10 coin ve +1 can
     saveProgress(); updateHud(); showResult(p, 'ok');
-    if (r.up) showLevelUp();
+    if (r.up) showLevelUp(gotLife);
+  } else if (isNear(v, p)) {                                   // ismi yanlış yazdı: can gitmez, uyarı verilir
+    const i = $('#inp'); i.classList.remove('bad'); i.offsetWidth; i.classList.add('bad');
+    $('#msg').className = 'err'; $('#msg').textContent = 'Futbolcunun ismini doğru yazınız.';
   } else {
     const i = $('#inp'); i.classList.remove('bad'); i.offsetWidth; i.classList.add('bad');
-    setLives(S.lives - 1);
+    setLives(S.lives - 1, true);
     if (S.lives === 0) showLocked(); else { $('#msg').className = 'err'; $('#msg').textContent = `Yanlış! Kalan hak: ${S.lives}`; }
   }
 }
@@ -92,9 +107,9 @@ function showResult(p, type) {
   $('#result').hidden = false;
   $('#next').onclick = () => { S.i++; if (S.i >= S.queue.length) { S.queue.sort(() => Math.random() - .5); S.i = 0; } loadPlayer(); };
 }
-function showLevelUp() {
+function showLevelUp(gotLife) {
   $('#up').innerHTML = `<div class="pop"><div class="st"><svg class="ico"><use href="#sStar"/></svg><b>${S.level}</b></div><h3>Tebrikler seviye atladınız</h3><p>Yeni seviye: ${S.level}</p>
-    <div class="gain"><svg><use href="#sCoin"/></svg>${LEVEL_COINS} coin kazandınız</div><button id="ok">Tamam</button></div>`;
+    <div class="gain"><svg><use href="#sCoin"/></svg>${LEVEL_COINS} coin kazandınız</div>${gotLife ? '<div class="gain"><svg><use href="#sHeart"/></svg>1 can kazandınız</div>' : ''}<button id="ok">Tamam</button></div>`;
   $('#up').hidden = false; $('#ok').onclick = () => { $('#up').hidden = true; };
 }
 // İpucu (1 coin): oyuncunun mevkisi. Aynı oyuncuda ikinci basış ücretsiz, tekrar gösterir
