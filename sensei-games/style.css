@@ -1,0 +1,100 @@
+:root{--navy:#0b3d24;--card:rgba(4,28,18,.8);--line:rgba(255,255,255,.2);--tx:#fff;--sub:#d3efdd;--green:#4ade80;--yel:#ffd60a;--red:#ff5a5f;--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;touch-action:manipulation;-webkit-text-size-adjust:100%;color:var(--tx);background:var(--navy);font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+/* Futbol sahası arka planı: çim şeritleri + çizgiler + lacivert perde */
+#pitch{position:fixed;inset:0;z-index:0;background:radial-gradient(120% 60% at 50% 0%,rgba(255,255,255,.16),transparent 62%),repeating-linear-gradient(180deg,#1d8148 0 64px,#187139 64px 128px)}
+#pitch::after{content:"";position:absolute;inset:0;background:radial-gradient(85% 65% at 50% 45%,transparent 38%,rgba(1,16,8,.65) 100%)}
+#pitch svg{position:absolute;inset:0;width:100%;height:100%;z-index:1}
+section{position:fixed;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--sat) 24px var(--sab)}
+section[hidden]{display:none}
+#splash h1{filter:drop-shadow(0 3px 12px rgba(0,0,0,.45));font-size:40px;letter-spacing:1px;margin:0 0 36px;font-weight:800;background:linear-gradient(90deg,#fff,#9db4ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ring{width:96px;height:96px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:6;stroke-linecap:round}.ring .bg{stroke:var(--line)}
+#arc{stroke:var(--green);stroke-dasharray:276.5;stroke-dashoffset:276.5;transition:stroke-dashoffset 4s linear}
+#home.in{animation:fade .5s}@keyframes fade{from{opacity:0}to{opacity:1}}
+#home button{width:100%;max-width:340px;border:0;border-radius:22px;font-weight:800;color:#fff}
+#play{padding:30px 0;font-size:34px;letter-spacing:3px;background:linear-gradient(180deg,#2fd873,#128a3f);border:2px solid rgba(255,255,255,.75)!important;box-shadow:0 12px 34px rgba(0,0,0,.45),0 0 0 6px rgba(255,255,255,.08)}
+#play:active{transform:scale(.97)}
+#multi{margin-top:18px;padding:16px 0;font-size:16px;letter-spacing:2px;background:var(--card);color:var(--sub);opacity:.6;pointer-events:none}
+/* Oyun */
+#game{justify-content:flex-start;align-items:stretch;padding:0}
+#gbar{height:8px;margin-top:var(--sat);background:rgba(255,255,255,.12)}
+#gbar i{display:block;height:100%;width:0;background:var(--green);box-shadow:0 0 12px var(--green)}
+#topline{display:flex;justify-content:space-between;align-items:center;padding:8px 16px 0}
+#guess{display:flex;gap:8px;padding:8px 16px 6px}
+#inp{flex:1;min-width:0;font-size:17px;padding:13px 15px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);color:#fff;outline:0;backdrop-filter:blur(6px)}
+#inp:focus{border-color:var(--green)}#inp::placeholder{color:var(--sub)}
+#inp.bad{border-color:var(--red);animation:shake .35s}@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+#go{border:0;border-radius:14px;padding:0 18px;background:var(--green);color:#04200f;font-weight:700;font-size:15px}
+#msg{min-height:34px;margin:6px 16px 0;font-size:14px;color:var(--yel);width:fit-content;max-width:calc(100% - 32px)}#msg:not(:empty){background:rgba(4,28,18,.88);border:1px solid var(--line);border-radius:10px;padding:6px 12px}#msg.err{color:#ff8a8d}
+#career{flex:1;overflow:auto;padding:4px 16px calc(120px + var(--sab));opacity:0;transition:opacity .4s}
+#career.show{opacity:1}
+/* Kariyer zaman çizgisi */
+.tl{list-style:none;margin:6px 0 0 10px;padding:0 0 0 22px;border-left:2px solid var(--line)}
+.tl li{position:relative;display:flex;justify-content:space-between;align-items:center;gap:10px;margin:10px 0;padding:14px 15px;background:var(--card);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(6px)}
+.tl li::before{content:"";position:absolute;left:-30px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(34,197,94,.2)}
+.tl b{font-size:16px}.tl span{font-size:13px;color:var(--yel);white-space:nowrap;font-weight:600}
+#result{position:fixed;inset:0;z-index:5;background:rgba(2,22,12,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;gap:8px}
+#result[hidden]{display:none}#result b{font-size:28px;color:var(--green)}#result h2{margin:0;font-size:30px}
+#result button{margin-top:18px;border:0;border-radius:16px;padding:15px 40px;background:var(--green);color:#06210f;font-size:18px;font-weight:800}
+
+#topline{padding:8px 12px 0;gap:8px}
+/* Sağ altta Pas ve İpucu */
+#fabs{position:fixed;right:14px;bottom:calc(14px + var(--sab));display:flex;gap:14px;z-index:3}
+.fab{border:0;background:none;color:#fff;display:flex;flex-direction:column;align-items:center;gap:4px}
+.fab em{font-style:normal;font-size:12px;color:var(--sub);text-shadow:0 1px 4px rgba(0,0,0,.6)}.fab em b{color:var(--yel)}
+.fab:active .ic{transform:scale(.94)}
+#result small{color:var(--sub);font-size:14px}#result b.pass{color:var(--yel)}
+/* Seviye atlama penceresi */
+#up{position:fixed;inset:0;z-index:8;background:rgba(2,22,12,.82);display:flex;align-items:center;justify-content:center;padding:24px}
+#up[hidden]{display:none}
+.pop{background:#0c2b1d;border:1px solid var(--line);border-radius:22px;padding:28px 24px;text-align:center;max-width:330px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.pop button{margin-top:18px;width:100%;border:0;border-radius:14px;padding:14px;background:var(--green);color:#04200f;font-size:17px;font-weight:800}
+
+/* HUD: yıldız ve coin, barın üzerine yarısı binecek şekilde */
+.ico{display:block;width:100%;height:100%}
+.ci{width:13px;height:13px;vertical-align:-2px;margin-left:3px}
+#xpbox{position:relative;height:44px;padding-left:22px;display:flex;align-items:center}
+#star{position:absolute;left:0;top:0;width:44px;height:44px;z-index:2;display:grid;place-items:center;filter:drop-shadow(0 3px 5px rgba(0,0,0,.5))}
+#star .ico{position:absolute;inset:0}
+#star b{position:relative;font-size:16px;color:#1b2130;margin-top:1px}
+#xpbar{position:relative;width:118px;height:24px;border-radius:12px;background:var(--card);border:1px solid var(--line);overflow:hidden}
+#xpbar i{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,#16a34a,var(--green));transition:width .5s}
+#xpbar span{position:relative;display:block;text-align:center;padding-left:20px;font-size:12px;font-weight:700;line-height:22px;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+#rbox{display:flex;align-items:center;gap:8px}
+#coinbox{position:relative;height:44px;padding-left:15px;display:flex;align-items:center}
+#coinimg{position:absolute;left:0;top:7px;width:30px;height:30px;z-index:2;filter:drop-shadow(0 2px 4px rgba(0,0,0,.55))}
+#coinbar{min-width:60px;height:24px;border-radius:12px;background:var(--card);border:1px solid rgba(255,214,10,.55);text-align:center;font-weight:700;font-size:13px;line-height:22px;padding:0 10px 0 20px}
+#heart{position:relative;width:46px;height:44px;display:grid;place-items:center;filter:drop-shadow(0 3px 6px rgba(0,0,0,.45))}
+#heart .ico{position:absolute;inset:0}
+#heart b{position:relative;font-size:16px;color:#fff;margin-top:-1px;text-shadow:0 1px 2px rgba(0,0,0,.55)}
+#heart.empty .ico{filter:grayscale(1) brightness(.7)}#heart.hit{animation:beat .45s}
+/* Pas ve İpucu düğmeleri */
+.fab .ic{width:62px;height:62px;border-radius:50%;background:var(--card);border:2px solid var(--yel);display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.fab .ic svg{width:38px;height:38px}
+#pass .ic{border-color:var(--green)}
+/* Seviye atlama */
+.pop .st{position:relative;width:76px;height:76px;margin:0 auto;display:grid;place-items:center;filter:drop-shadow(0 6px 12px rgba(0,0,0,.5))}
+.pop .st .ico{position:absolute;inset:0}.pop .st b{position:relative;font-size:26px;color:#1b2130;margin-top:3px}
+.pop .gain{display:inline-flex;align-items:center;gap:8px;margin:12px 0 4px;font-weight:800;font-size:18px;color:var(--yel)}
+.pop .gain svg{width:28px;height:28px}
+
+/* Bir sonraki cana kalan süre (kalbin altında) */
+#topline{padding-bottom:14px}
+#heart small{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:-2px;font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8);white-space:nowrap}
+
+#ver{position:absolute;bottom:calc(14px + var(--sab));left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.5)}
+
+/* Lig seçim ekranı */
+#leagues{justify-content:flex-start;align-items:stretch;padding:calc(var(--sat) + 16px) 16px calc(20px + var(--sab));overflow:auto}
+.lghead{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.lghead h2{margin:0;font-size:26px;text-shadow:0 2px 10px rgba(0,0,0,.45)}
+#lgHome,#lgback{border:1px solid var(--line);background:var(--card);color:#fff;border-radius:12px;padding:8px 12px;font-size:14px}
+#lglist{display:flex;flex-direction:column;gap:10px}
+.lg{display:flex;align-items:center;gap:14px;width:100%;border:1px solid var(--line);background:var(--card);color:#fff;border-radius:16px;padding:16px;font-size:17px;font-weight:600;text-align:left;backdrop-filter:blur(6px)}
+.lg i{font-style:normal;font-size:26px;width:34px;text-align:center}.lg span{flex:1}.lg small{color:var(--sub);font-weight:500;font-size:13px}
+.lg.all{background:linear-gradient(180deg,#2fd873,#128a3f);border:2px solid rgba(255,255,255,.75);font-size:20px;padding:20px 16px;box-shadow:0 10px 28px rgba(0,0,0,.4)}
+.lg.all small{color:#e8fff0}.lg:active{transform:scale(.98)}.lg:disabled{opacity:.4}
+#lgrow{display:flex;align-items:center;gap:10px;padding:0 16px}
+#lgname{font-size:12px;color:var(--sub);text-shadow:0 1px 4px rgba(0,0,0,.7)}
+#lgback{padding:5px 10px;font-size:12px}

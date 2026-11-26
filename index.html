@@ -47,6 +47,11 @@ window.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='SC
   <button id="multi" disabled>ÇOK OYUNCULU</button>
   <div id="ver"></div>
 </section>
+<!-- 2b) Lig seçimi -->
+<section id="leagues" hidden>
+  <div class="lghead"><button id="lgHome">‹ Geri</button><h2>Lig Seç</h2></div>
+  <div id="lglist"></div>
+</section>
 <!-- 3) Oyun -->
 <section id="game" hidden>
   <div id="gbar"><i></i></div>
@@ -58,6 +63,7 @@ window.addEventListener('error',function(e){var t=e.target;if(t&&t.tagName==='SC
       <div id="heart"><svg class="ico"><use href="#sHeart"/></svg><b id="lives">5</b><small id="regen"></small></div>
     </div>
   </div>
+  <div id="lgrow"><button id="lgback">‹ Ligler</button><span id="lgname"></span></div>
   <div id="guess">
     <input id="inp" type="text" placeholder="Futbolcuyu tahmin et…" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false" enterkeyhint="go">
     <button id="go">Tahmin</button>

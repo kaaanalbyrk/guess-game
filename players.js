@@ -1,6 +1,6 @@
 // players.js — 50 oyuncu. Satır: [takım, dönem]. Hint için 'pos' (mevki) kullanılır.
 // src: 'w' Wikipedia 2026 · 'h' 2026 haberleriyle güncellendi · 't' taslak (doğrulanacak)
-const VERI_SURUMU = 11;
+const VERI_SURUMU = 12;
 const PLAYERS = [
   {name:'Cristiano Ronaldo', aliases:['Ronaldo','CR7','Cristiano'], pos:'Santrafor', src:'w', rows:[['Sporting CP','2002 – 2003'],['Manchester United','2003 – 2009'],['Real Madrid','2009 – 2018'],['Juventus','2018 – 2021'],['Manchester United','2021 – 2022'],['Al-Nassr','2022 – günümüz']]},
   {name:'Lionel Messi', aliases:['Messi','Leo Messi','Lionel'], pos:'Sağ açık', src:'w', rows:[['Barcelona','2004 – 2021'],['Paris Saint-Germain','2021 – 2023'],['Inter Miami','2023 – günümüz']]},
@@ -79,4 +79,34 @@ const PLAYERS = [
   {name:'Alexander Nübel', aliases:['Nubel','Alexander'], pos:'Kaleci', src:'h', rows:[['Schalke 04','2015 – 2020'],['Bayern Münih','2020 – 2026'],['AS Monaco (kiralık)','2020 – 2022'],['Stuttgart (kiralık)','2023 – 2026'],['Beşiktaş','2026 – günümüz']]},
   {name:'Wilfred Ndidi', aliases:['Ndidi','Wilfred'], pos:'Defansif orta saha', src:'h', rows:[['Genk','2015 – 2017'],['Leicester City','2017 – 2025'],['Beşiktaş','2025 – günümüz']]},
   {name:'Salih Özcan', aliases:['Ozcan','Salih','Salih Ozcan'], pos:'Defansif orta saha', src:'h', rows:[['Köln','2016 – 2022'],['Borussia Dortmund','2022 – 2026'],['Beşiktaş','2026 – günümüz']]},
+  // --- Lig modları için eklenenler (PSG/Barcelona/Inter/Bayern/Arsenal güncel kadroları Eyl 2026 kaynaklarıyla; efsaneler 't' = hafızadan) ---
+  {name:'Ousmane Dembélé', aliases:['Dembele','Ousmane'], pos:'Sağ açık', src:'h', rows:[['Rennes','2015 – 2016'],['Borussia Dortmund','2016 – 2017'],['Barcelona','2017 – 2023'],['Paris Saint-Germain','2023 – günümüz']]},
+  {name:'Achraf Hakimi', aliases:['Hakimi','Achraf'], pos:'Sağ bek', src:'h', rows:[['Real Madrid','2016 – 2018'],['Borussia Dortmund (kiralık)','2018 – 2020'],['Inter','2020 – 2021'],['Paris Saint-Germain','2021 – günümüz']]},
+  {name:'Marquinhos', aliases:['Marquinhos Correa'], pos:'Stoper', src:'h', rows:[['Corinthians','2011 – 2012'],['Roma','2012 – 2013'],['Paris Saint-Germain','2013 – günümüz']]},
+  {name:'Vitinha', aliases:['Vitinha Ferreira'], pos:'Merkez orta saha', src:'h', rows:[['Porto','2019 – 2022'],['Wolverhampton (kiralık)','2020 – 2021'],['Paris Saint-Germain','2022 – günümüz']]},
+  {name:'Khvicha Kvaratskhelia', aliases:['Kvaratskhelia','Kvara','Khvicha'], pos:'Sol açık', src:'h', rows:[['Rubin Kazan','2019 – 2022'],['Napoli','2022 – 2025'],['Paris Saint-Germain','2025 – günümüz']]},
+  {name:'Bradley Barcola', aliases:['Barcola','Bradley'], pos:'Sol açık', src:'h', rows:[['Lyon','2021 – 2023'],['Paris Saint-Germain','2023 – günümüz']]},
+  {name:'Désiré Doué', aliases:['Doue','Desire Doue','Desire'], pos:'Ofansif orta saha', src:'h', rows:[['Rennes','2022 – 2025'],['Paris Saint-Germain','2025 – günümüz']]},
+  {name:'Fabián Ruiz', aliases:['Fabian Ruiz','Ruiz','Fabian'], pos:'Merkez orta saha', src:'h', rows:[['Real Betis','2014 – 2018'],['Napoli','2018 – 2022'],['Paris Saint-Germain','2022 – günümüz']]},
+  {name:'Ferran Torres', aliases:['Ferran','Torres'], pos:'Sağ açık', src:'h', rows:[['Valencia','2017 – 2020'],['Manchester City','2020 – 2022'],['Barcelona','2022 – 2026'],['Paris Saint-Germain','2026 – günümüz']]},
+  {name:'Lamine Yamal', aliases:['Yamal','Lamine'], pos:'Sağ açık', src:'h', rows:[['Barcelona','2023 – günümüz']]},
+  {name:'Pau Cubarsí', aliases:['Cubarsi','Pau Cubarsi','Pau'], pos:'Stoper', src:'h', rows:[['Barcelona','2023 – günümüz']]},
+  {name:'Rodri', aliases:['Rodrigo Hernandez','Rodri Hernandez'], pos:'Defansif orta saha', src:'h', rows:[['Villarreal','2015 – 2018'],['Atlético Madrid','2018 – 2019'],['Manchester City','2019 – 2026'],['Barcelona','2026 – günümüz']]},
+  {name:'Carles Puyol', aliases:['Puyol','Carles'], pos:'Stoper', src:'t', rows:[['Barcelona','1999 – 2014']]},
+  {name:'Lautaro Martínez', aliases:['Lautaro Martinez','Lautaro','Martinez'], pos:'Santrafor', src:'h', rows:[['Racing Club','2015 – 2018'],['Inter','2018 – günümüz']]},
+  {name:'Javier Zanetti', aliases:['Zanetti','Javier'], pos:'Sağ bek', src:'t', rows:[['Talleres','1992 – 1993'],['Banfield','1993 – 1995'],['Inter','1995 – 2014']]},
+  {name:'Luís Figo', aliases:['Figo','Luis Figo','Luis'], pos:'Sağ açık', src:'t', rows:[['Sporting CP','1989 – 1995'],['Barcelona','1995 – 2000'],['Real Madrid','2000 – 2005'],['Inter','2005 – 2009']]},
+  {name:'Franco Baresi', aliases:['Baresi','Franco'], pos:'Stoper', src:'t', rows:[['AC Milan','1977 – 1997']]},
+  {name:'Dayot Upamecano', aliases:['Upamecano','Dayot'], pos:'Stoper', src:'h', rows:[['Red Bull Salzburg','2015 – 2017'],['RB Leipzig','2017 – 2021'],['Bayern Münih','2021 – günümüz']]},
+  {name:'Philipp Lahm', aliases:['Lahm','Philipp'], pos:'Sağ bek', src:'t', rows:[['Bayern Münih','2002 – 2017'],['VfB Stuttgart (kiralık)','2003 – 2005']]},
+  {name:'Oliver Kahn', aliases:['Kahn','Oliver'], pos:'Kaleci', src:'t', rows:[['Karlsruher SC','1987 – 1994'],['Bayern Münih','1994 – 2008']]},
+  {name:'Michael Ballack', aliases:['Ballack','Michael'], pos:'Merkez orta saha', src:'t', rows:[['Chemnitzer FC','1995 – 1997'],['Kaiserslautern','1997 – 1999'],['Bayer Leverkusen','1999 – 2002'],['Bayern Münih','2002 – 2006'],['Chelsea','2006 – 2010'],['Bayer Leverkusen','2010 – 2012']]},
+  {name:'Xabi Alonso', aliases:['Alonso','Xabi'], pos:'Merkez orta saha', src:'t', rows:[['Real Sociedad','1999 – 2004'],['Eibar (kiralık)','2000 – 2001'],['Liverpool','2004 – 2009'],['Real Madrid','2009 – 2014'],['Bayern Münih','2014 – 2017']]},
+  {name:'Paul Scholes', aliases:['Scholes','Paul'], pos:'Merkez orta saha', src:'t', rows:[['Manchester United','1993 – 2013']]},
+  {name:'Alan Shearer', aliases:['Shearer','Alan'], pos:'Santrafor', src:'t', rows:[['Southampton','1988 – 1992'],['Blackburn Rovers','1992 – 1996'],['Newcastle United','1996 – 2006']]},
+  {name:'Patrick Vieira', aliases:['Vieira','Patrick'], pos:'Merkez orta saha', src:'t', rows:[['Cannes','1993 – 1995'],['AC Milan','1995 – 1996'],['Arsenal','1996 – 2005'],['Juventus','2005 – 2006'],['Inter','2006 – 2010'],['Manchester City','2010 – 2011']]},
+  {name:'Petr Čech', aliases:['Cech','Petr Cech','Petr'], pos:'Kaleci', src:'t', rows:[['Chmel Blšany','1999 – 2001'],['Sparta Prag','2001 – 2002'],['Rennes','2002 – 2004'],['Chelsea','2004 – 2015'],['Arsenal','2015 – 2019']]},
+  {name:'Gary Neville', aliases:['Neville','Gary'], pos:'Sağ bek', src:'t', rows:[['Manchester United','1992 – 2011']]},
+  {name:'Eric Cantona', aliases:['Cantona','Eric'], pos:'Forvet', src:'t', rows:[['Auxerre','1983 – 1988'],['Marseille','1988 – 1991'],['Montpellier (kiralık)','1989 – 1990'],['Nîmes','1991 – 1992'],['Leeds United','1992'],['Manchester United','1992 – 1997']]},
+  {name:'Declan Rice', aliases:['Rice','Declan'], pos:'Defansif orta saha', src:'h', rows:[['West Ham United','2017 – 2023'],['Arsenal','2023 – günümüz']]},
 ];

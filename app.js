@@ -8,26 +8,42 @@ function uyari(m) {
   if (!b) { b = document.createElement('div'); b.id = 'dbg'; b.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99;background:#b00020;color:#fff;font:12px/1.35 -apple-system,sans-serif;padding:calc(6px + env(safe-area-inset-top)) 10px 6px'; document.body.appendChild(b); }
   b.textContent = m;
 }
-const show = id => ['splash','home','game'].forEach(x => $('#' + x).hidden = x !== id);
-const S = {queue: [], i: 0, busy: false, lives: 5, coins: 10, xp: 0, level: 1, hinted: false};
+const show = id => ['splash','home','leagues','game'].forEach(x => $('#' + x).hidden = x !== id);
+const S = {queue: [], i: 0, busy: false, lives: 5, coins: 10, xp: 0, level: 1, hinted: false, liga: 'all', tok: 0};
 const COST_HINT = 1, COST_PASS = 3, LEVEL_COINS = 10, START_COINS = 10;
 
 // 1) Açılış: çember 4 sn'de dolar, sonra menü gelir
 requestAnimationFrame(() => requestAnimationFrame(() => $('#arc').style.strokeDashoffset = 0));
 setTimeout(() => { show('home'); $('#home').classList.add('in'); }, 4200);
 
-// 2) Oyna: yeşil bar yüklenir, ardından oyuncu çıkar
-$('#play').onclick = () => {
-  S.queue = [...PLAYERS].sort(() => Math.random() - .5); S.i = 0;
+// 2) Oyna: önce lig seçim ekranı açılır
+$('#play').onclick = () => { renderLeagues(); show('leagues'); };
+function renderLeagues() {
+  $('#lglist').innerHTML = LIGLER.map(L => {
+    const n = ligHavuzu(PLAYERS, L.id).length;
+    return `<button class="lg ${L.id === 'all' ? 'all' : ''}" data-lig="${L.id}" ${n ? '' : 'disabled'}><i>${L.bayrak}</i><span>${L.ad}</span><small>${n} oyuncu</small></button>`;
+  }).join('');
+}
+$('#lglist').addEventListener('click', e => { const b = e.target.closest('[data-lig]'); if (b) startLeague(b.dataset.lig); });
+$('#lgHome').onclick = () => show('home');
+// Lig seçilince: Tüm Ligler = hepsi; diğerleri = EN SON kulübü o ligde olan oyuncular
+function startLeague(id) {
+  const pool = ligHavuzu(PLAYERS, id);
+  if (!pool.length) return;
+  S.liga = id; S.queue = [...pool].sort(() => Math.random() - .5); S.i = 0;
+  $('#lgname').textContent = LIGLER.find(L => L.id === id).ad + ' · ' + pool.length + ' oyuncu';
   show('game'); loadPlayer();
-};
+}
+// Oyundan lig ekranına dön
+$('#lgback').onclick = () => { S.tok++; S.busy = false; $('#result').hidden = true; $('#up').hidden = true; renderLeagues(); show('leagues'); };
+
 function loadPlayer() {
-  const bar = $('#gbar i'), c = $('#career');
+  const bar = $('#gbar i'), c = $('#career'), tok = ++S.tok;   // tok: lig değişirse eski zamanlayıcı etkisiz kalır
   S.busy = true; c.classList.remove('show'); $('#result').hidden = true; $('#msg').textContent = ''; $('#msg').className = '';
   $('#inp').value = ''; S.hinted = false;
   bar.style.transition = 'none'; bar.style.width = '0'; bar.offsetWidth;
   bar.style.transition = 'width 1.4s ease-out'; bar.style.width = '100%';
-  setTimeout(() => { try { renderCareer(S.queue[S.i]); c.classList.add('show'); } finally { S.busy = false; } }, 1500);
+  setTimeout(() => { if (tok !== S.tok) return; try { renderCareer(S.queue[S.i]); c.classList.add('show'); } finally { S.busy = false; } }, 1500);
 }
 // Kariyer zaman çizgisi: takım + dönem (oyuncunun adı gösterilmez)
 function renderCareer(p) {
@@ -141,7 +157,7 @@ document.addEventListener('touchmove', e => { if (e.touches.length > 1) e.preven
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(console.error);
 
 // Dosya sürümü kontrolü: app.js, logic.js ve players.js aynı sürümde olmalı
-const APP_V = 11;
+const APP_V = 12;
 (function () {
   $('#ver').textContent = 'v' + APP_V;
   const logicV = typeof DOSYA_SURUMU === 'undefined' ? 'YOK' : DOSYA_SURUMU, veriV = typeof VERI_SURUMU === 'undefined' ? 'YOK' : VERI_SURUMU;
